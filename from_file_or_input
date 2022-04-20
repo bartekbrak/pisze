@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# So that I don't have to type password again and again, like pgp-agent
+#
+# Ask user for secret input, store it in $1. If $1 exists read it to stdout.
+# Allows storing password in a file, temporarily if /tmp is used.
+# Example usage:
+# encfsctl decode encrypted --extpass='from_file_or_input /tmp/encfs.key' \
+#  -- -UHE2B,CHjrWVhWdZ5-OVizZmnndrZ4iUGwcodWEx1Ymu0/Gi81B2kthlrhOKh1ay,lpAZ0/B4eJs7L9p-Me0MZmvDlvl1Ep
+
+if [[ $# -eq 0 ]] ; then
+    echo 'provide file as argument'
+    exit 1
+fi
+filename=$1
+shift
+
+if [ -e $filename ]
+then
+    cat $filename
+else
+    read -s -p "pass: "
+    echo $REPLY > $filename
+    echo $REPLY
+fi
